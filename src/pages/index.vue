@@ -16,6 +16,7 @@ const list = computed(() => {
     <span :class="{ active: active === 'ionicons4' }" @click="active = 'ionicons4'">ionicons4</span>
     <span :class="{ active: active === 'carbon' }" @click="active = 'carbon'">carbon</span>
   </div>
+  {{ active }}
   <ul>
     <li v-for="val, key in list" :key="key">
       <component :is="val" class="icon" />
