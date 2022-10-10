@@ -21,7 +21,7 @@ jobs:
           cache: pnpm
 
       - name: Install
-        run: pnpm install
+        run: yarn
 
       - name: Lint
         run: pnpm run lint
@@ -37,7 +37,7 @@ jobs:
           cache: pnpm
 
       - name: Install
-        run: pnpm install
+        run: yarn
 
       - name: Typecheck
         run: pnpm run typecheck
@@ -61,7 +61,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: pnpm
 
-      - run: pnpm install
+      - run: yarn install
       - run: pnpm run test:unit
 
   test-e2e:
@@ -83,7 +83,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: pnpm
 
-      - run: pnpm install
+      - run: yarn install
 
       - name: Cypress PNPM Patch
         run: cp pnpm-lock.yaml package-lock.json
@@ -92,5 +92,5 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           install-command: echo
-          build: pnpm run build
+          build: yarn build
           start: npx vite --port 3333
