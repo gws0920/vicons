@@ -1,62 +1,71 @@
 <script setup lang="ts">
-const user = useUserStore()
-const name = $ref(user.savedName)
+import * as ionicons4 from '@vicons/ionicons4'
+import * as carbon from '@vicons/carbon'
 
-const router = useRouter()
-const go = () => {
-  if (name)
-    router.push(`/hi/${encodeURIComponent(name)}`)
-}
+const active = ref('carbon')
 
-const { t } = useI18n()
+const list = computed(() => {
+  if (active.value === 'ionicons4')
+    return ionicons4
+  else return carbon
+})
 </script>
 
 <template>
-  <div>
-    <div text-4xl>
-      <div i-carbon-campsite inline-block />
-    </div>
-    <p>
-      <a rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank">
-        Vitesse
-      </a>
-    </p>
-    <p>
-      <em text-sm opacity-75>{{ t('intro.desc') }}</em>
-    </p>
-
-    <div py-4 />
-
-    <input
-      id="input"
-      v-model="name"
-      :placeholder="t('intro.whats-your-name')"
-      :aria-label="t('intro.whats-your-name')"
-      type="text"
-      autocomplete="false"
-      p="x4 y2"
-      w="250px"
-      text="center"
-      bg="transparent"
-      border="~ rounded gray-200 dark:gray-700"
-      outline="none active:none"
-      @keydown.enter="go"
-    >
-    <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
-
-    <div>
-      <button
-        btn m-3 text-sm
-        :disabled="!name"
-        @click="go"
-      >
-        {{ t('button.go') }}
-      </button>
-    </div>
+  <div class="tabs">
+    <span :class="{ active: active === 'ionicons4' }" @click="active = 'ionicons4'">ionicons4</span>
+    <span :class="{ active: active === 'carbon' }" @click="active = 'carbon'">carbon</span>
   </div>
+  <ul>
+    <li v-for="val, key in list" :key="key">
+      <component :is="val" class="icon" />
+      <span>{{ key }}</span>
+    </li>
+  </ul>
 </template>
 
+<style>
+.tabs {
+  margin-bottom: 12px;
+}
+.tabs span {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 12px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+.tabs span.active {
+  border-bottom-color: black;
+}
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 0 auto;
+}
+
+li {
+  display: block;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+span {
+  font-size: 13px;
+}
+
+.icon {
+  width: 2em;
+  height: 2em;
+}
+</style>
+
 <route lang="yaml">
-meta:
-  layout: home
+
 </route>
