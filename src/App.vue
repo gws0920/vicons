@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import * as ionicons4 from '@vicons/ionicons4'
 import * as carbon from '@vicons/carbon'
-// import * as material from '@vicons/material'
-// import * as fluent from '@vicons/fluent'
-import { ref, computed } from 'vue'
+import * as material from '@vicons/material'
+import * as fluent from '@vicons/fluent'
+import { ref, computed, onMounted } from 'vue'
 
-// TODO: 列表太长 需要优化
 const active = ref('carbon')
 const searchVal = ref('')
 const obj = computed(() => {
   if (active.value === 'ionicons4')
     return ionicons4
-  // else if (active.value === 'material')
-  //   return material
-  // else if (active.value === 'fluent')
-  //   return material
+  else if (active.value === 'material')
+    return material
+  else if (active.value === 'fluent')
+    return material
   else return carbon
 })
 const list = computed(() => {
@@ -22,10 +21,26 @@ const list = computed(() => {
     return item.toLocaleLowerCase().includes(searchVal.value.toLocaleLowerCase())
   })
 })
+const page = ref(1)
+const virtuallyList = computed(() => {
+  return list.value.slice(0, 200 * page.value)
+})
 
 const switchTab = (tab: string) => {
   active.value = tab
+  page.value = 1
 }
+
+onMounted(() => {
+  const el = document.getElementById('app')
+  el?.addEventListener('scroll', (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target as any
+    if (virtuallyList.value.length == list.value.length) return
+    if (scrollTop + clientHeight >= scrollHeight - 20) {
+      page.value++
+    }
+  })
+})
 </script>
 
 <template>
@@ -33,15 +48,15 @@ const switchTab = (tab: string) => {
     <div class="tabs">
       <span :class="{ active: active === 'carbon' }" @click="switchTab('carbon')">carbon</span>
       <span :class="{ active: active === 'ionicons4' }" @click="switchTab('ionicons4')">ionicons4</span>
-      <!-- <span :class="{ active: active === 'material' }" @click="switchTab('material')">material</span>
-      <span :class="{ active: active === 'fluent' }" @click="switchTab('fluent')">fluent</span> -->
+      <span :class="{ active: active === 'material' }" @click="switchTab('material')">material</span>
+      <span :class="{ active: active === 'fluent' }" @click="switchTab('fluent')">fluent</span>
     </div>
     <div class="search">
       <input v-model="searchVal" placeholder="搜索图标" />
     </div>
   </div>
   <ul>
-    <li v-for="item in list" :key="item">
+    <li v-for="item in virtuallyList" :key="item">
       <component :is="obj[item]" class="icon" />
       <span>{{ item }}</span>
     </li>
@@ -51,7 +66,8 @@ const switchTab = (tab: string) => {
 <style>
 #app {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
 }
 @media (prefers-color-scheme: dark) {
   .header {
@@ -88,7 +104,7 @@ const switchTab = (tab: string) => {
 }
 ul {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 12px;
   margin: 0 auto;
   padding: 0 0 40px 0;
@@ -96,7 +112,7 @@ ul {
 
 li {
   display: block;
-  min-width: 180px;
+  min-width: 200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
