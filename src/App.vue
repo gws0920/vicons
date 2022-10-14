@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import * as ionicons4 from '@vicons/ionicons4'
 import * as carbon from '@vicons/carbon'
-import * as material from '@vicons/material'
-import * as fluent from '@vicons/fluent'
+// import * as material from '@vicons/material'
+// import * as fluent from '@vicons/fluent'
 import { ref, computed, onMounted } from 'vue'
 
 const active = ref('carbon')
@@ -10,10 +10,10 @@ const searchVal = ref('')
 const obj = computed(() => {
   if (active.value === 'ionicons4')
     return ionicons4
-  else if (active.value === 'material')
-    return material
-  else if (active.value === 'fluent')
-    return material
+  // else if (active.value === 'material')
+  //   return material
+  // else if (active.value === 'fluent')
+  //   return material
   else return carbon
 })
 const list = computed(() => {
@@ -48,8 +48,8 @@ onMounted(() => {
     <div class="tabs">
       <span :class="{ active: active === 'carbon' }" @click="switchTab('carbon')">carbon</span>
       <span :class="{ active: active === 'ionicons4' }" @click="switchTab('ionicons4')">ionicons4</span>
-      <span :class="{ active: active === 'material' }" @click="switchTab('material')">material</span>
-      <span :class="{ active: active === 'fluent' }" @click="switchTab('fluent')">fluent</span>
+      <!-- <span :class="{ active: active === 'material' }" @click="switchTab('material')">material</span>
+      <span :class="{ active: active === 'fluent' }" @click="switchTab('fluent')">fluent</span> -->
     </div>
     <div class="search">
       <input v-model="searchVal" placeholder="搜索图标" />
